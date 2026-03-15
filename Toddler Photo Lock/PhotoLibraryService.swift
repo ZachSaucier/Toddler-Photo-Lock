@@ -4,6 +4,10 @@ import UIKit
 final class PhotoLibraryService {
     private let imageManager = PHCachingImageManager()
 
+    static func hasAllowedPhotoAccess(_ status: PHAuthorizationStatus) -> Bool {
+        status == .authorized || status == .limited
+    }
+
     func authorizationStatus() -> PHAuthorizationStatus {
         PHPhotoLibrary.authorizationStatus(for: .readWrite)
     }

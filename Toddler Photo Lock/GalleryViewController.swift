@@ -8,11 +8,22 @@ final class GalleryViewController: UIViewController {
     private var pickedImages: [PickedImage] = []
     private var lastAuthorizationStatus: PHAuthorizationStatus?
     private var shouldPresentGuidedAccessEducation = false
+    private var shouldPresentPhotoAccessOptionsOnFirstAppearance: Bool
     private var presentationModel = GalleryPresentationModel.make(
         status: .notDetermined,
         libraryAssetCount: 0,
         pickedImageCount: 0
     )
+
+    init(shouldPresentPhotoAccessOptionsOnFirstAppearance: Bool = false) {
+        self.shouldPresentPhotoAccessOptionsOnFirstAppearance = shouldPresentPhotoAccessOptionsOnFirstAppearance
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     private lazy var navigationActionButton = UIBarButtonItem(
         title: "",
@@ -22,7 +33,8 @@ final class GalleryViewController: UIViewController {
     )
 
     private struct PickedImage {
-        let identifier = UUID()
+        let identifier: String
+        let assetIdentifier: String?
         let image: UIImage
     }
 
@@ -106,6 +118,7 @@ final class GalleryViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         refreshContent()
+        presentPhotoAccessOptionsIfNeeded()
     }
 
     override func viewDidLayoutSubviews() {
@@ -278,7 +291,11 @@ final class GalleryViewController: UIViewController {
                 defer { group.leave() }
                 guard let image = object as? UIImage else { return }
 
-                let pickedImage = PickedImage(image: image.preparingForDisplay() ?? image)
+                let pickedImage = PickedImage(
+                    identifier: result.assetIdentifier ?? UUID().uuidString,
+                    assetIdentifier: result.assetIdentifier,
+                    image: image.preparingForDisplay() ?? image
+                )
                 lock.lock()
                 loadedImages.append((index, pickedImage))
                 lock.unlock()
@@ -287,7 +304,10 @@ final class GalleryViewController: UIViewController {
 
         group.notify(queue: .main) { [weak self] in
             guard let self else { return }
-            self.pickedImages = loadedImages.sorted { $0.0 < $1.0 }.map(\.1)
+            let newImages = loadedImages.sorted { $0.0 < $1.0 }.map(\.1)
+            self.pickedImages = OrderedUniqueMerger.merge(existing: self.pickedImages, incoming: newImages) {
+                $0.identifier
+            }
             self.refreshContent()
         }
     }
@@ -322,6 +342,19 @@ final class GalleryViewController: UIViewController {
         let educationViewController = GuidedAccessEducationViewController()
         educationViewController.modalPresentationStyle = .fullScreen
         present(educationViewController, animated: true)
+    }
+
+    private func presentPhotoAccessOptionsIfNeeded() {
+        guard shouldPresentPhotoAccessOptionsOnFirstAppearance else { return }
+        shouldPresentPhotoAccessOptionsOnFirstAppearance = false
+
+        let status = photoLibraryService.authorizationStatus()
+        guard !PhotoLibraryService.hasAllowedPhotoAccess(status),
+              presentedViewController == nil else {
+            return
+        }
+
+        presentPhotoAccessOptions()
     }
 
     @objc private func handlePrimaryAction() {
@@ -385,7 +418,7 @@ extension GalleryViewController: UICollectionViewDataSource, UICollectionViewDel
 
         case .pickedImages:
             let image = pickedImages[indexPath.item]
-            cell.representedAssetIdentifier = image.identifier.uuidString
+            cell.representedAssetIdentifier = image.identifier
             cell.imageView.image = image.image
 
         case .none:

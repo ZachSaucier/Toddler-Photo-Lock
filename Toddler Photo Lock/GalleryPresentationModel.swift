@@ -22,7 +22,7 @@ struct GalleryPresentationModel {
                 contentSource: .pickedImages,
                 message: nil,
                 actionTitle: nil,
-                navigationActionTitle: "Choose More"
+                navigationActionTitle: "Choose more"
             )
         }
 

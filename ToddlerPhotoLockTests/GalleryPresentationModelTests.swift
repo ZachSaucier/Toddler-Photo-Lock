@@ -16,7 +16,7 @@ final class GalleryPresentationModelTests: XCTestCase {
 
         XCTAssertEqual(model.contentSource, .pickedImages)
         XCTAssertNil(model.actionTitle)
-        XCTAssertEqual(model.navigationActionTitle, "Choose More")
+        XCTAssertEqual(model.navigationActionTitle, "Choose more")
     }
 
     func testLimitedWithoutAssetsKeepsAddPhotosActionsVisible() {
