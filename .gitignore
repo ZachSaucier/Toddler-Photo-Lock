@@ -1,0 +1,33 @@
+# macOS
+.DS_Store
+
+# Xcode user-specific files
+*.xcuserstate
+xcuserdata/
+
+# Build artifacts
+build/
+DerivedData/
+.derivedData/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+
+# Generated XcodeGen project
+*.xcodeproj/
+
+# Playground / misc Xcode temp files
+timeline.xctimeline
+playground.xcworkspace
+
+# Test and profiling output
+*.xcresult
+*.moved-aside
+
+# Fastlane / screenshots / local automation output
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/

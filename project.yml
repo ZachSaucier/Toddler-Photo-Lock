@@ -1,0 +1,36 @@
+name: "Toddler Photo Lock"
+options:
+  bundleIdPrefix: com.example
+  deploymentTarget:
+    iOS: "16.0"
+settings:
+  base:
+    SWIFT_VERSION: 5.0
+    TARGETED_DEVICE_FAMILY: 1
+targets:
+  "Toddler Photo Lock":
+    type: application
+    platform: iOS
+    sources:
+      - path: "Toddler Photo Lock"
+        excludes:
+          - Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.ToddlerPhotoLock
+        PRODUCT_MODULE_NAME: ToddlerPhotoLock
+        PRODUCT_NAME: "Toddler Photo Lock"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: "Toddler Photo Lock/Info.plist"
+  ToddlerPhotoLockTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - ToddlerPhotoLockTests
+    dependencies:
+      - target: "Toddler Photo Lock"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.ToddlerPhotoLockTests
+        GENERATE_INFOPLIST_FILE: YES
