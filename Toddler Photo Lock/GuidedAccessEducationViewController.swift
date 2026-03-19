@@ -93,17 +93,17 @@ final class GuidedAccessEducationViewController: UIViewController {
 
     private func refreshContent() {
         if UIAccessibility.isGuidedAccessEnabled {
-            titleLabel.text = "Guided Access Is Ready"
+            titleLabel.text = "Guided Access is on"
             bodyLabel.text = "Toddler Photo Lock works best when Guided Access keeps your child inside the photo and blocks accidental app switching or swipes."
-            stepsLabel.text = "Guided Access is now on. Open a photo and Toddler Photo Lock will lock automatically."
+            stepsLabel.text = "You’re ready to open a photo. Toddler Photo Lock will lock automatically while Guided Access is active."
             primaryButton.setTitle("Continue", for: .normal)
             secondaryButton.setTitle("Close", for: .normal)
         } else {
-            titleLabel.text = "Turn On Guided Access"
-            bodyLabel.text = "Guided Access is what makes Toddler Photo Lock safe to hand over. It keeps little hands from leaving the photo, changing your zoom, or moving into other apps."
-            stepsLabel.text = "How to enable it:\n1. Open Settings.\n2. Tap Accessibility.\n3. Tap Guided Access.\n4. Turn it on and set a passcode."
-            primaryButton.setTitle("Open Guided Access Settings", for: .normal)
-            secondaryButton.setTitle("Not Now", for: .normal)
+            titleLabel.text = "Use Guided Access before handing over your phone"
+            bodyLabel.text = "Toddler Photo Lock works best with Guided Access. If you already turned it on in Settings, you’re all set — just start Guided Access after opening a photo. If you have not set it up yet, you can do that now."
+            stepsLabel.text = "To set it up:\n1. Open Settings.\n2. Tap Accessibility.\n3. Tap Guided Access.\n4. Turn it on and choose your passcode or Face ID.\n\nOnce it is configured, open a photo here and start Guided Access with your shortcut."
+            primaryButton.setTitle("Open Guided Access settings", for: .normal)
+            secondaryButton.setTitle("Not now", for: .normal)
         }
     }
 

@@ -26,24 +26,24 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
 
         return PhotoAccessIntroViewController { [weak self] in
-            self?.showGallery(promptForPhotoAccess: true, animated: true)
+            self?.showGallery(requestPhotoAuthorization: true, animated: true)
         }
     }
 
-    private func makeGalleryNavigationController(promptForPhotoAccess: Bool = false) -> UINavigationController {
+    private func makeGalleryNavigationController(requestPhotoAuthorization: Bool = false) -> UINavigationController {
         let navigationController = UINavigationController(
             rootViewController: GalleryViewController(
-                shouldPresentPhotoAccessOptionsOnFirstAppearance: promptForPhotoAccess
+                shouldRequestPhotoAuthorizationOnFirstAppearance: requestPhotoAuthorization
             )
         )
         navigationController.view.backgroundColor = .black
         return navigationController
     }
 
-    private func showGallery(promptForPhotoAccess: Bool, animated: Bool) {
+    private func showGallery(requestPhotoAuthorization: Bool, animated: Bool) {
         guard let window else { return }
         let galleryNavigationController = makeGalleryNavigationController(
-            promptForPhotoAccess: promptForPhotoAccess
+            requestPhotoAuthorization: requestPhotoAuthorization
         )
 
         guard animated else {

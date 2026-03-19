@@ -1,8 +1,9 @@
 This todo list is for the human creating this app, not any AI agents.
 
-- Test on our devices
-- Add help page -- Link to FAQ, link to create issue, privacy policy page, support email, donate button again but permanent
-- Icon sizes: 76, 152, 83.5, and 167 px
-- Create app in app store and add description and images, apple review notes
+- Make app a bit prettier
+- Take app preview screenshots
 - Create a basic website with a privacy policy on it (Svelte)
-- Create release bundle
+- Fill in app store details: https://appstoreconnect.apple.com/apps/6760800642/distribution/ios/version/inflight
+
+Short description: Disable controls while viewing a photo you choose.
+Longer: An iOS app that lets you choose a photo and disable controls for your toddler.

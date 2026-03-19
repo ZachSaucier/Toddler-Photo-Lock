@@ -1,15 +1,48 @@
 import Photos
 import UIKit
 
+enum AppPreferences {
+    static let pinnedAlbumIdentifiersKey = "ToddlerPhotoLock.pinnedAlbumIdentifiers"
+
+    static func pinnedAlbumIdentifiers(in userDefaults: UserDefaults = .standard) -> [String] {
+        let identifiers = userDefaults.array(forKey: pinnedAlbumIdentifiersKey) as? [String] ?? []
+        return normalizedIdentifiers(identifiers)
+    }
+
+    static func setPinnedAlbumIdentifiers(_ identifiers: [String], in userDefaults: UserDefaults = .standard) {
+        userDefaults.set(normalizedIdentifiers(identifiers), forKey: pinnedAlbumIdentifiersKey)
+    }
+
+    static func normalizedIdentifiers(_ identifiers: [String]) -> [String] {
+        var seen: Set<String> = []
+
+        return identifiers.compactMap { identifier in
+            let trimmed = identifier.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !trimmed.isEmpty, seen.insert(trimmed).inserted else { return nil }
+            return trimmed
+        }
+    }
+}
+
 enum GuidedAccessSupport {
     static let buyMeACoffeeURL = URL(string: "https://buymeacoffee.com/zachsaucier")!
     static let buyMeACoffeeDismissedKey = "ToddlerPhotoLock.didTapBuyMeACoffee"
+
+    static func isBuyMeACoffeeDismissed(in userDefaults: UserDefaults = .standard) -> Bool {
+        userDefaults.bool(forKey: buyMeACoffeeDismissedKey)
+    }
+
+    static func dismissBuyMeACoffee(in userDefaults: UserDefaults = .standard) {
+        userDefaults.set(true, forKey: buyMeACoffeeDismissedKey)
+    }
 
     static func shouldPresentEducation(
         previousStatus: PHAuthorizationStatus,
         currentStatus: PHAuthorizationStatus,
         isGuidedAccessEnabled: Bool
     ) -> Bool {
+        // iOS only exposes whether Guided Access is currently active, not whether the
+        // user has already configured it for future use in Settings.
         let hadLibraryAccess = previousStatus == .authorized || previousStatus == .limited
         let hasLibraryAccess = currentStatus == .authorized || currentStatus == .limited
         return !hadLibraryAccess && hasLibraryAccess && !isGuidedAccessEnabled

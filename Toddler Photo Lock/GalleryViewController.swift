@@ -8,15 +8,15 @@ final class GalleryViewController: UIViewController {
     private var pickedImages: [PickedImage] = []
     private var lastAuthorizationStatus: PHAuthorizationStatus?
     private var shouldPresentGuidedAccessEducation = false
-    private var shouldPresentPhotoAccessOptionsOnFirstAppearance: Bool
+    private var shouldRequestPhotoAuthorizationOnFirstAppearance: Bool
     private var presentationModel = GalleryPresentationModel.make(
         status: .notDetermined,
         libraryAssetCount: 0,
         pickedImageCount: 0
     )
 
-    init(shouldPresentPhotoAccessOptionsOnFirstAppearance: Bool = false) {
-        self.shouldPresentPhotoAccessOptionsOnFirstAppearance = shouldPresentPhotoAccessOptionsOnFirstAppearance
+    init(shouldRequestPhotoAuthorizationOnFirstAppearance: Bool = false) {
+        self.shouldRequestPhotoAuthorizationOnFirstAppearance = shouldRequestPhotoAuthorizationOnFirstAppearance
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -96,6 +96,26 @@ final class GalleryViewController: UIViewController {
         return button
     }()
 
+    private lazy var helpButton: UIButton = {
+        var configuration = UIButton.Configuration.filled()
+        configuration.baseBackgroundColor = UIColor(white: 0.16, alpha: 1)
+        configuration.baseForegroundColor = .white
+        configuration.cornerStyle = .capsule
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 14, bottom: 8, trailing: 14)
+        configuration.title = "?"
+        configuration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
+            var outgoing = incoming
+            outgoing.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+            return outgoing
+        }
+
+        let button = UIButton(configuration: configuration)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.accessibilityLabel = "Help"
+        button.addTarget(self, action: #selector(handleHelp), for: .touchUpInside)
+        return button
+    }()
+
     private lazy var stateStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [messageLabel, actionButton])
         stack.translatesAutoresizingMaskIntoConstraints = false
@@ -118,12 +138,13 @@ final class GalleryViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         refreshContent()
-        presentPhotoAccessOptionsIfNeeded()
+        requestPhotoAuthorizationIfNeeded()
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateCollectionLayout()
+        updateBottomAccessoryInsets()
     }
 
     deinit {
@@ -134,9 +155,10 @@ final class GalleryViewController: UIViewController {
         view.addSubview(collectionView)
         view.addSubview(stateStack)
         view.addSubview(buyMeACoffeeButton)
+        view.addSubview(helpButton)
 
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -147,6 +169,9 @@ final class GalleryViewController: UIViewController {
 
             actionButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 160),
 
+            helpButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 12),
+            helpButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
+
             buyMeACoffeeButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -12),
             buyMeACoffeeButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -12)
         ])
@@ -155,17 +180,22 @@ final class GalleryViewController: UIViewController {
     private func refreshContent() {
         let status = photoLibraryService.authorizationStatus()
         let previousStatus = lastAuthorizationStatus ?? status
+        let isGuidedAccessEnabled = UIAccessibility.isGuidedAccessEnabled
 
-        if status == .authorized || status == .limited {
-            photoLibraryAssets = photoLibraryService.fetchAssets()
+        if PhotoLibraryService.hasAllowedPhotoAccess(status) {
+            photoLibraryAssets = fetchAssetsForCurrentSelection()
+        } else {
+            photoLibraryAssets = PHAsset.fetchAssets(withLocalIdentifiers: [], options: nil)
         }
 
         if GuidedAccessSupport.shouldPresentEducation(
             previousStatus: previousStatus,
             currentStatus: status,
-            isGuidedAccessEnabled: UIAccessibility.isGuidedAccessEnabled
+            isGuidedAccessEnabled: isGuidedAccessEnabled
         ) {
             shouldPresentGuidedAccessEducation = true
+        } else if isGuidedAccessEnabled {
+            shouldPresentGuidedAccessEducation = false
         }
         lastAuthorizationStatus = status
 
@@ -198,6 +228,10 @@ final class GalleryViewController: UIViewController {
         presentGuidedAccessEducationIfNeeded()
     }
 
+    private func fetchAssetsForCurrentSelection() -> PHFetchResult<PHAsset> {
+        return photoLibraryService.fetchAssets()
+    }
+
     private func requestAccess() {
         photoLibraryService.requestAuthorization { [weak self] _ in
             self?.refreshContent()
@@ -211,38 +245,31 @@ final class GalleryViewController: UIViewController {
         switch status {
         case .notDetermined:
             alert = UIAlertController(
-                title: "Choose Photo Access",
-                message: "Use your whole library, or just pick specific photos for Toddler Photo Lock.",
+                title: "Choose specific photos",
+                message: "Select specific photos for Toddler Photo Lock.",
                 preferredStyle: .actionSheet
             )
-            alert.addAction(UIAlertAction(title: "Choose Specific Photos", style: .default) { [weak self] _ in
+            alert.addAction(UIAlertAction(title: "Choose specific photos", style: .default) { [weak self] _ in
                 self?.presentSpecificPhotoPicker()
-            })
-            alert.addAction(UIAlertAction(title: "Allow Full Library Access", style: .default) { [weak self] _ in
-                self?.requestAccess()
             })
 
         case .denied:
             alert = UIAlertController(
-                title: "Choose How to Continue",
-                message: "You can pick specific photos right now, or open Settings if you want Toddler Photo Lock to browse your whole library.",
+                title: "Choose how to continue",
+                message: "You can pick specific photos right now.",
                 preferredStyle: .actionSheet
             )
-            alert.addAction(UIAlertAction(title: "Choose Specific Photos", style: .default) { [weak self] _ in
+            alert.addAction(UIAlertAction(title: "Choose specific photos", style: .default) { [weak self] _ in
                 self?.presentSpecificPhotoPicker()
-            })
-            alert.addAction(UIAlertAction(title: "Open Settings for Full Access", style: .default) { _ in
-                guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
-                UIApplication.shared.open(url)
             })
 
         case .restricted:
             alert = UIAlertController(
-                title: "Choose Specific Photos",
-                message: "Full library access is restricted on this device. If iOS allows it, you can still try selecting specific photos.",
+                title: "Choose specific photos",
+                message: "You can still select specific photos for Toddler Photo Lock.",
                 preferredStyle: .actionSheet
             )
-            alert.addAction(UIAlertAction(title: "Choose Specific Photos", style: .default) { [weak self] _ in
+            alert.addAction(UIAlertAction(title: "Choose specific photos", style: .default) { [weak self] _ in
                 self?.presentSpecificPhotoPicker()
             })
 
@@ -323,12 +350,34 @@ final class GalleryViewController: UIViewController {
     }
 
     private func refreshBuyMeACoffeeButton() {
-        let isHidden = UserDefaults.standard.bool(forKey: GuidedAccessSupport.buyMeACoffeeDismissedKey)
+        let isHidden = GuidedAccessSupport.isBuyMeACoffeeDismissed()
         buyMeACoffeeButton.isHidden = isHidden
+        updateBottomAccessoryInsets()
+    }
 
-        let bottomInset: CGFloat = isHidden ? 0 : 58
+    private func updateBottomAccessoryInsets() {
+        let visibleButtonHeight = max(helpButton.bounds.height, buyMeACoffeeButton.isHidden ? 0 : buyMeACoffeeButton.bounds.height)
+        let bottomInset: CGFloat = visibleButtonHeight > 0 ? visibleButtonHeight + 24 : 0
         collectionView.contentInset.bottom = bottomInset
         collectionView.verticalScrollIndicatorInsets.bottom = bottomInset
+    }
+
+    private func presentHelp() {
+        let helpViewController = HelpViewController()
+        let navigationController = UINavigationController(rootViewController: helpViewController)
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .black
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+
+        navigationController.navigationBar.standardAppearance = appearance
+        navigationController.navigationBar.scrollEdgeAppearance = appearance
+        navigationController.navigationBar.compactAppearance = appearance
+        navigationController.navigationBar.tintColor = .white
+        navigationController.overrideUserInterfaceStyle = .dark
+
+        present(navigationController, animated: true)
     }
 
     private func presentGuidedAccessEducationIfNeeded() {
@@ -338,15 +387,20 @@ final class GalleryViewController: UIViewController {
             return
         }
 
+        guard !UIAccessibility.isGuidedAccessEnabled else {
+            shouldPresentGuidedAccessEducation = false
+            return
+        }
+
         shouldPresentGuidedAccessEducation = false
         let educationViewController = GuidedAccessEducationViewController()
         educationViewController.modalPresentationStyle = .fullScreen
         present(educationViewController, animated: true)
     }
 
-    private func presentPhotoAccessOptionsIfNeeded() {
-        guard shouldPresentPhotoAccessOptionsOnFirstAppearance else { return }
-        shouldPresentPhotoAccessOptionsOnFirstAppearance = false
+    private func requestPhotoAuthorizationIfNeeded() {
+        guard shouldRequestPhotoAuthorizationOnFirstAppearance else { return }
+        shouldRequestPhotoAuthorizationOnFirstAppearance = false
 
         let status = photoLibraryService.authorizationStatus()
         guard !PhotoLibraryService.hasAllowedPhotoAccess(status),
@@ -354,7 +408,7 @@ final class GalleryViewController: UIViewController {
             return
         }
 
-        presentPhotoAccessOptions()
+        requestAccess()
     }
 
     @objc private func handlePrimaryAction() {
@@ -364,22 +418,28 @@ final class GalleryViewController: UIViewController {
         }
 
         switch photoLibraryService.authorizationStatus() {
-        case .notDetermined:
-            presentPhotoAccessOptions()
+        case .notDetermined, .denied, .restricted:
+            presentSpecificPhotoPicker()
         case .limited:
             PHPhotoLibrary.shared().presentLimitedLibraryPicker(from: self)
-        case .denied, .restricted:
-            presentPhotoAccessOptions()
-        default:
+        case .authorized:
+            // We respect existing authorization state but continue to operate with explicit selection intent.
+            break
+        @unknown default:
             break
         }
     }
 
     @objc private func handleBuyMeACoffee() {
-        UserDefaults.standard.set(true, forKey: GuidedAccessSupport.buyMeACoffeeDismissedKey)
+        GuidedAccessSupport.dismissBuyMeACoffee()
         refreshBuyMeACoffeeButton()
         UIApplication.shared.open(GuidedAccessSupport.buyMeACoffeeURL)
     }
+
+    @objc private func handleHelp() {
+        presentHelp()
+    }
+
 }
 
 extension GalleryViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {

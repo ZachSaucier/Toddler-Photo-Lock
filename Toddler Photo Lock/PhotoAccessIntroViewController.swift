@@ -26,7 +26,7 @@ final class PhotoAccessIntroViewController: UIViewController {
     private let messageLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "To display a picture, Toddler Photo Lock needs access to it. You can share your whole library or choose specific photos.\n\nNo photos or data are uploaded or shared. Everything stays on your phone."
+        label.text = "To display a picture, Toddler Photo Lock needs access to it.\n\nNo photos or data are uploaded or shared. Everything stays on your phone."
         label.textColor = UIColor(white: 0.86, alpha: 1)
         label.font = .preferredFont(forTextStyle: .body)
         label.adjustsFontForContentSizeCategory = true

@@ -7,7 +7,7 @@ final class GalleryPresentationModelTests: XCTestCase {
         let model = GalleryPresentationModel.make(status: .notDetermined, libraryAssetCount: 0, pickedImageCount: 0)
 
         XCTAssertEqual(model.contentSource, .none)
-        XCTAssertEqual(model.actionTitle, "Choose Photos")
+        XCTAssertEqual(model.actionTitle, "Choose photos")
         XCTAssertNil(model.navigationActionTitle)
     }
 
@@ -23,8 +23,8 @@ final class GalleryPresentationModelTests: XCTestCase {
         let model = GalleryPresentationModel.make(status: .limited, libraryAssetCount: 0, pickedImageCount: 0)
 
         XCTAssertEqual(model.contentSource, .none)
-        XCTAssertEqual(model.actionTitle, "Add Photos")
-        XCTAssertEqual(model.navigationActionTitle, "Add Photos")
+        XCTAssertEqual(model.actionTitle, "Add photos")
+        XCTAssertEqual(model.navigationActionTitle, "Add photos")
     }
 
     func testAuthorizedAssetsShowPhotoLibraryContent() {
