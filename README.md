@@ -1,4 +1,4 @@
-# $Toddler Photo Lock
+# Toddler Photo Lock
 
 #### Made by a dad for his kid.
 
