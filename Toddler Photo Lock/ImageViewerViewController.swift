@@ -1,6 +1,30 @@
 import Photos
 import UIKit
 
+private final class PaddedLabel: UILabel {
+    private let textInsets = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
+
+    override func drawText(in rect: CGRect) {
+        super.drawText(in: rect.inset(by: textInsets))
+    }
+
+    override var intrinsicContentSize: CGSize {
+        let size = super.intrinsicContentSize
+        return CGSize(width: size.width + textInsets.left + textInsets.right,
+                      height: size.height + textInsets.top + textInsets.bottom)
+    }
+
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        let insetSize = CGSize(
+            width: max(0, size.width - textInsets.left - textInsets.right),
+            height: max(0, size.height - textInsets.top - textInsets.bottom)
+        )
+        let fittingSize = super.sizeThatFits(insetSize)
+        return CGSize(width: fittingSize.width + textInsets.left + textInsets.right,
+                      height: fittingSize.height + textInsets.top + textInsets.bottom)
+    }
+}
+
 final class ImageViewerViewController: UIViewController, UIScrollViewDelegate {
     private enum Source {
         case asset(PHAsset, PhotoLibraryService)
@@ -43,8 +67,8 @@ final class ImageViewerViewController: UIViewController, UIScrollViewDelegate {
 
     private lazy var closeButton = makeOverlayButton(systemName: "xmark")
 
-    private let guidedAccessBanner: UILabel = {
-        let label = UILabel()
+    private let guidedAccessBanner: PaddedLabel = {
+        let label = PaddedLabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
         label.backgroundColor = UIColor(white: 0, alpha: 0.72)

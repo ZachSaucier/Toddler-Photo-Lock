@@ -52,6 +52,12 @@ final class GuidedAccessEducationViewController: UIViewController {
         return button
     }()
 
+    private let contentView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
     private lazy var stackView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [titleLabel, bodyLabel, stepsLabel, primaryButton, secondaryButton])
         stack.translatesAutoresizingMaskIntoConstraints = false
@@ -64,14 +70,28 @@ final class GuidedAccessEducationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
-        view.addSubview(stackView)
+        view.addSubview(contentView)
+        contentView.addSubview(stackView)
+
+        let maxWidthConstraint = contentView.widthAnchor.constraint(lessThanOrEqualToConstant: 640)
+        maxWidthConstraint.isActive = true
+
+        let fillWidthConstraint = contentView.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor)
+        fillWidthConstraint.priority = .defaultLow
+        fillWidthConstraint.isActive = true
 
         NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
-            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            stackView.topAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
-            view.safeAreaLayoutGuide.bottomAnchor.constraint(greaterThanOrEqualTo: stackView.bottomAnchor, constant: 40)
+            contentView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            contentView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            contentView.leadingAnchor.constraint(greaterThanOrEqualTo: view.layoutMarginsGuide.leadingAnchor),
+            contentView.trailingAnchor.constraint(lessThanOrEqualTo: view.layoutMarginsGuide.trailingAnchor),
+            contentView.topAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
+            view.safeAreaLayoutGuide.bottomAnchor.constraint(greaterThanOrEqualTo: contentView.bottomAnchor, constant: 40),
+
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
 
         NotificationCenter.default.addObserver(
