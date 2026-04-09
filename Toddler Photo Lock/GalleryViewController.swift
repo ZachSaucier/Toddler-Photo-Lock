@@ -399,7 +399,9 @@ final class GalleryViewController: UIViewController {
     }
 
     @objc private func handleHelp() {
-        presentHelp()
+        ParentalGate.present(from: self) { [weak self] in
+            self?.presentHelp()
+        }
     }
 
 }
