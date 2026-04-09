@@ -147,7 +147,7 @@ final class TipJarViewController: UIViewController {
         let label = makeBodyLabel(text: "Annual supporter")
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
 
-        let price = product.map { "\($0.displayPrice)/yr" } ?? "$X/yr"
+        let price = product.map { "\($0.displayPrice)/yr" } ?? "$4.99/yr"
         let button = makePillButton(title: price)
         button.tag = 99
         button.addTarget(self, action: #selector(handleSubscribeTapped), for: .touchUpInside)
