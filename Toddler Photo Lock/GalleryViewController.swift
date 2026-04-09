@@ -74,28 +74,6 @@ final class GalleryViewController: UIViewController {
         return button
     }()
 
-    private lazy var buyMeACoffeeButton: UIButton = {
-        var configuration = UIButton.Configuration.filled()
-        configuration.baseBackgroundColor = UIColor(red: 0.98, green: 0.83, blue: 0.26, alpha: 1)
-        configuration.baseForegroundColor = .black
-        configuration.cornerStyle = .capsule
-        configuration.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12)
-        configuration.title = "Buy me a coffee"
-        configuration.image = UIImage(systemName: "cup.and.saucer.fill")
-        configuration.imagePadding = 6
-        configuration.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: 13, weight: .semibold)
-        configuration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
-            var outgoing = incoming
-            outgoing.font = UIFont.systemFont(ofSize: 13, weight: .semibold)
-            return outgoing
-        }
-
-        let button = UIButton(configuration: configuration)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(handleBuyMeACoffee), for: .touchUpInside)
-        return button
-    }()
-
     private lazy var helpButton: UIButton = {
         var configuration = UIButton.Configuration.filled()
         configuration.baseBackgroundColor = UIColor(white: 0.16, alpha: 1)
@@ -154,7 +132,6 @@ final class GalleryViewController: UIViewController {
     private func setUpHierarchy() {
         view.addSubview(collectionView)
         view.addSubview(stateStack)
-        view.addSubview(buyMeACoffeeButton)
         view.addSubview(helpButton)
 
         NSLayoutConstraint.activate([
@@ -170,10 +147,7 @@ final class GalleryViewController: UIViewController {
             actionButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 160),
 
             helpButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 12),
-            helpButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
-
-            buyMeACoffeeButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -12),
-            buyMeACoffeeButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -12)
+            helpButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -12)
         ])
     }
 
@@ -224,7 +198,7 @@ final class GalleryViewController: UIViewController {
         }
 
         collectionView.reloadData()
-        refreshBuyMeACoffeeButton()
+        updateBottomAccessoryInsets()
         presentGuidedAccessEducationIfNeeded()
     }
 
@@ -349,15 +323,9 @@ final class GalleryViewController: UIViewController {
         layout.itemSize = CGSize(width: width, height: width)
     }
 
-    private func refreshBuyMeACoffeeButton() {
-        let isHidden = GuidedAccessSupport.isBuyMeACoffeeDismissed()
-        buyMeACoffeeButton.isHidden = isHidden
-        updateBottomAccessoryInsets()
-    }
-
     private func updateBottomAccessoryInsets() {
-        let visibleButtonHeight = max(helpButton.bounds.height, buyMeACoffeeButton.isHidden ? 0 : buyMeACoffeeButton.bounds.height)
-        let bottomInset: CGFloat = visibleButtonHeight > 0 ? visibleButtonHeight + 24 : 0
+        let buttonHeight = helpButton.bounds.height
+        let bottomInset: CGFloat = buttonHeight > 0 ? buttonHeight + 24 : 0
         collectionView.contentInset.bottom = bottomInset
         collectionView.verticalScrollIndicatorInsets.bottom = bottomInset
     }
@@ -428,12 +396,6 @@ final class GalleryViewController: UIViewController {
         @unknown default:
             break
         }
-    }
-
-    @objc private func handleBuyMeACoffee() {
-        GuidedAccessSupport.dismissBuyMeACoffee()
-        refreshBuyMeACoffeeButton()
-        UIApplication.shared.open(GuidedAccessSupport.buyMeACoffeeURL)
     }
 
     @objc private func handleHelp() {

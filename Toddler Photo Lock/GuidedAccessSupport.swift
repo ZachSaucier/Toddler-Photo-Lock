@@ -25,17 +25,6 @@ enum AppPreferences {
 }
 
 enum GuidedAccessSupport {
-    static let buyMeACoffeeURL = URL(string: "https://buymeacoffee.com/zachsaucier")!
-    static let buyMeACoffeeDismissedKey = "ToddlerPhotoLock.didTapBuyMeACoffee"
-
-    static func isBuyMeACoffeeDismissed(in userDefaults: UserDefaults = .standard) -> Bool {
-        userDefaults.bool(forKey: buyMeACoffeeDismissedKey)
-    }
-
-    static func dismissBuyMeACoffee(in userDefaults: UserDefaults = .standard) {
-        userDefaults.set(true, forKey: buyMeACoffeeDismissedKey)
-    }
-
     static func shouldPresentEducation(
         previousStatus: PHAuthorizationStatus,
         currentStatus: PHAuthorizationStatus,

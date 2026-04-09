@@ -16,21 +16,6 @@ final class GuidedAccessSupportTests: XCTestCase {
         XCTAssertEqual(AppPreferences.pinnedAlbumIdentifiers(in: userDefaults), ["favorites", "album-1"])
     }
 
-    func testDismissBuyMeACoffeePersistsHiddenState() {
-        let suiteName = "GuidedAccessSupportTests.buyMeACoffee"
-        let userDefaults = try! XCTUnwrap(UserDefaults(suiteName: suiteName))
-        userDefaults.removePersistentDomain(forName: suiteName)
-        defer {
-            userDefaults.removePersistentDomain(forName: suiteName)
-        }
-
-        XCTAssertFalse(GuidedAccessSupport.isBuyMeACoffeeDismissed(in: userDefaults))
-
-        GuidedAccessSupport.dismissBuyMeACoffee(in: userDefaults)
-
-        XCTAssertTrue(GuidedAccessSupport.isBuyMeACoffeeDismissed(in: userDefaults))
-    }
-
     func testPresentsEducationWhenLibraryAccessIsNewAndGuidedAccessIsOff() {
         XCTAssertTrue(
             GuidedAccessSupport.shouldPresentEducation(

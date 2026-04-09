@@ -8,7 +8,7 @@ struct PrivacyPolicySection: Equatable {
 }
 
 enum AppSupportContent {
-    static let donateMessage = "I'm a dad who made this for my child. We found it very useful and wanted to share it with the world. If you've found this app to be useful, a donation would be very appreciated! It costs me $100 a year for a developer license in order for it to live in the app store."
+    static let donateMessage = "I'm a dad who made this for my child. If it's been useful to you, a tip or annual subscription would mean a lot — it costs $100/year just to keep the app in the App Store."
     static let faqURL = URL(string: "https://github.com/ZachSaucier/Toddler-Photo-Lock/wiki/FAQ")!
     static let issuesURL = URL(string: "https://github.com/ZachSaucier/Toddler-Photo-Lock/issues")!
     static let repositoryURL = URL(string: "https://github.com/ZachSaucier/Toddler-Photo-Lock")!

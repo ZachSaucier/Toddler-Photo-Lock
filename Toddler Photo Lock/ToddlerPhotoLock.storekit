@@ -1,0 +1,124 @@
+{
+  "identifier" : "ToddlerPhotoLock",
+  "nonConsumableProducts" : [
+
+  ],
+  "consumableProducts" : [
+    {
+      "displayPrice" : "2.99",
+      "familySharable" : false,
+      "internalID" : "tip2",
+      "localizations" : [
+        {
+          "description" : "A small one-time tip to say thanks.",
+          "displayName" : "Small Tip",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.example.ToddlerPhotoLock.tip2",
+      "referenceName" : "Small Tip ($2)",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "4.99",
+      "familySharable" : false,
+      "internalID" : "tip5",
+      "localizations" : [
+        {
+          "description" : "A medium one-time tip to say thanks.",
+          "displayName" : "Medium Tip",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.example.ToddlerPhotoLock.tip5",
+      "referenceName" : "Medium Tip ($5)",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "19.99",
+      "familySharable" : false,
+      "internalID" : "tip20",
+      "localizations" : [
+        {
+          "description" : "A large one-time tip to say thanks.",
+          "displayName" : "Large Tip",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.example.ToddlerPhotoLock.tip20",
+      "referenceName" : "Large Tip ($20)",
+      "type" : "Consumable"
+    }
+  ],
+  "autoRenewableSubscriptions" : [
+    {
+      "familySharable" : false,
+      "internalID" : "annual",
+      "localizations" : [
+        {
+          "description" : "Annual supporter subscription. Helps cover the $100/year Apple developer license.",
+          "displayName" : "Annual Supporter",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.example.ToddlerPhotoLock.annual",
+      "referenceName" : "Annual Supporter",
+      "subscriptionGroupID" : "ToddlerPhotoLockSupporters",
+      "subscriptionPeriod" : "P1Y",
+      "type" : "RecurringSubscription",
+      "introductoryOffer" : null,
+      "displayPrice" : "9.99"
+    }
+  ],
+  "settings" : {
+    "_applicationInReview" : false,
+    "_billingGracePeriodEnabled" : false,
+    "_billingRetryEnabled" : true,
+    "_customerCancellationEnabled" : true,
+    "_failTransactionsEnabled" : false,
+    "_interruptedPurchasesEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      }
+    ]
+  },
+  "version" : {
+    "major" : 2,
+    "minor" : 0
+  }
+}

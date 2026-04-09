@@ -3,6 +3,7 @@ import UIKit
 final class HelpViewController: UIViewController {
     private let scrollView = UIScrollView()
     private let contentStack = UIStackView()
+    private let tipJarViewController = TipJarViewController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,21 +35,25 @@ final class HelpViewController: UIViewController {
             contentStack.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -24)
         ])
 
-        let helpTitle = makeSectionTitleLabel(text: "Help")
-        let donateTitle = makeSectionTitleLabel(text: "Donate")
-        let donateBody = makeBodyLabel(text: AppSupportContent.donateMessage)
-        let donateButton = makeDonateButton()
-
-        contentStack.addArrangedSubview(helpTitle)
+        // Help section
+        contentStack.addArrangedSubview(makeSectionTitleLabel(text: "Help"))
         contentStack.addArrangedSubview(makeLinkButton(title: "• Privacy Policy", imageName: "chevron.right", action: #selector(handlePrivacyPolicy)))
         contentStack.addArrangedSubview(makeLinkButton(title: "• FAQ", imageName: "arrow.up.right", action: #selector(handleFAQ)))
         contentStack.addArrangedSubview(makeLinkButton(title: "• Report an issue", imageName: "arrow.up.right", action: #selector(handleReportIssue)))
         contentStack.addArrangedSubview(makeLinkButton(title: "• Email support", imageName: "envelope.fill", action: #selector(handleEmailSupport)))
         contentStack.setCustomSpacing(30, after: contentStack.arrangedSubviews.last!)
-        contentStack.addArrangedSubview(donateTitle)
-        contentStack.addArrangedSubview(donateBody)
-        contentStack.addArrangedSubview(donateButton)
+
+        // Donate section
+        contentStack.addArrangedSubview(makeSectionTitleLabel(text: "Donate"))
+        contentStack.addArrangedSubview(makeBodyLabel(text: AppSupportContent.donateMessage))
+
+        // Tip jar — embedded as a child view controller so it can present alerts
+        addChild(tipJarViewController)
+        contentStack.addArrangedSubview(tipJarViewController.view)
+        tipJarViewController.didMove(toParent: self)
     }
+
+    // MARK: - View factories
 
     private func makeSectionTitleLabel(text: String) -> UILabel {
         let label = UILabel()
@@ -70,22 +75,6 @@ final class HelpViewController: UIViewController {
         return label
     }
 
-    private func makeDonateButton() -> UIButton {
-        var configuration = UIButton.Configuration.filled()
-        configuration.baseBackgroundColor = UIColor(red: 0.98, green: 0.83, blue: 0.26, alpha: 1)
-        configuration.baseForegroundColor = .black
-        configuration.cornerStyle = .capsule
-        configuration.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 14, bottom: 10, trailing: 14)
-        configuration.title = "Buy me a coffee"
-        configuration.image = UIImage(systemName: "cup.and.saucer.fill")
-        configuration.imagePadding = 6
-
-        let button = UIButton(configuration: configuration)
-        button.contentHorizontalAlignment = .center
-        button.addTarget(self, action: #selector(handleDonate), for: .touchUpInside)
-        return button
-    }
-
     private func makeLinkButton(title: String, imageName: String, action: Selector) -> UIButton {
         var configuration = UIButton.Configuration.plain()
         configuration.title = title
@@ -105,13 +94,10 @@ final class HelpViewController: UIViewController {
         UIApplication.shared.open(url)
     }
 
+    // MARK: - Actions
+
     @objc private func handleClose() {
         dismiss(animated: true)
-    }
-
-    @objc private func handleDonate() {
-        GuidedAccessSupport.dismissBuyMeACoffee()
-        open(GuidedAccessSupport.buyMeACoffeeURL)
     }
 
     @objc private func handlePrivacyPolicy() {
