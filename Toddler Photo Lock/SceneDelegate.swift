@@ -31,7 +31,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     private func makeGalleryNavigationController(requestPhotoAuthorization: Bool = false) -> UINavigationController {
-        let navigationController = UINavigationController(
+        let navigationController = OrientationAwareNavigationController(
             rootViewController: GalleryViewController(
                 shouldRequestPhotoAuthorizationOnFirstAppearance: requestPhotoAuthorization
             )

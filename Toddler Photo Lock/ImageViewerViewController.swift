@@ -37,6 +37,9 @@ final class ImageViewerViewController: UIViewController, UIScrollViewDelegate {
         didSet {
             setNeedsStatusBarAppearanceUpdate()
             setNeedsUpdateOfHomeIndicatorAutoHidden()
+            if #available(iOS 16.0, *) {
+                setNeedsUpdateOfSupportedInterfaceOrientations()
+            }
         }
     }
 
@@ -143,6 +146,21 @@ final class ImageViewerViewController: UIViewController, UIScrollViewDelegate {
 
     override var prefersHomeIndicatorAutoHidden: Bool {
         isLocked
+    }
+
+    override var shouldAutorotate: Bool {
+        !isLocked
+    }
+
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        guard isLocked else { return .all }
+        // Lock to whichever orientation is active when Guided Access starts.
+        switch UIDevice.current.orientation {
+        case .landscapeLeft:        return .landscapeRight // device left → status bar right
+        case .landscapeRight:       return .landscapeLeft  // device right → status bar left
+        case .portraitUpsideDown:   return .portraitUpsideDown
+        default:                    return .portrait
+        }
     }
 
     deinit {
