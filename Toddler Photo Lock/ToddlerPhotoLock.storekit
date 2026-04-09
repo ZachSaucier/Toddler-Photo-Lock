@@ -5,7 +5,7 @@
   ],
   "consumableProducts" : [
     {
-      "displayPrice" : "2.99",
+      "displayPrice" : "1.99",
       "familySharable" : false,
       "internalID" : "tip2",
       "localizations" : [
@@ -67,7 +67,7 @@
       "subscriptionPeriod" : "P1Y",
       "type" : "RecurringSubscription",
       "introductoryOffer" : null,
-      "displayPrice" : "9.99"
+      "displayPrice" : "4.99"
     }
   ],
   "settings" : {

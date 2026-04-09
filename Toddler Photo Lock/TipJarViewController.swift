@@ -303,9 +303,9 @@ final class TipJarViewController: UIViewController {
 
     private func priceLabel(for productID: String) -> String {
         switch productID {
-        case TipJarProduct.tip2:  return "$2"
-        case TipJarProduct.tip5:  return "$5"
-        case TipJarProduct.tip20: return "$20"
+        case TipJarProduct.tip2:  return "$1.99"
+        case TipJarProduct.tip5:  return "$4.99"
+        case TipJarProduct.tip20: return "$19.99"
         default: return "—"
         }
     }
