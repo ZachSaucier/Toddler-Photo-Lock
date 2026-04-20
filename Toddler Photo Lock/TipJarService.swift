@@ -1,5 +1,6 @@
 import Foundation
 import StoreKit
+import os
 
 // MARK: - Product identifiers
 
@@ -40,6 +41,8 @@ struct SubscriptionInfo: Codable, Equatable {
 final class TipJarService: ObservableObject {
     static let shared = TipJarService()
 
+    private let logger = Logger(subsystem: "com.example.ToddlerPhotoLock", category: "TipJarService")
+
     /// productID → formatted price paid (persisted across launches)
     private(set) var completedTips: [String: String] = [:]
 
@@ -63,10 +66,13 @@ final class TipJarService: ObservableObject {
     // MARK: - Public API
 
     func loadProducts() async {
+        logger.info("Requesting products for IDs: \(TipJarProduct.allIDs)")
         do {
             let fetched = try await Product.products(for: TipJarProduct.allIDs)
             products = Dictionary(uniqueKeysWithValues: fetched.map { ($0.id, $0) })
+            logger.info("Loaded \(fetched.count) products successfully")
         } catch {
+            logger.error("Failed to load tip products: \(error.localizedDescription)")
             // Products unavailable (e.g. no StoreKit config in simulator) — fail silently
         }
     }

@@ -144,7 +144,7 @@ final class TipJarViewController: UIViewController {
         row.alignment = .center
         row.spacing = 12
 
-        let label = makeBodyLabel(text: "Annual supporter")
+        let label = makeBodyLabel(text: "Annual subscription")
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
 
         let price = product.map { "\($0.displayPrice)/yr" } ?? "$4.99/yr"

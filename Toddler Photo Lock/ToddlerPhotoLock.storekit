@@ -1,7 +1,33 @@
 {
-  "identifier" : "ToddlerPhotoLock",
-  "nonConsumableProducts" : [
-
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "autoRenewableSubscriptions" : [
+    {
+      "displayPrice" : "4.99",
+      "familySharable" : false,
+      "internalID" : "annual",
+      "introductoryOffer" : null,
+      "localizations" : [
+        {
+          "description" : "An annual tip. No additional functionality is enabled.",
+          "displayName" : "Annual subscription",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.example.ToddlerPhotoLock.annual",
+      "referenceName" : "Annual subscription",
+      "subscriptionGroupID" : "22022605",
+      "subscriptionPeriod" : "P1Y",
+      "type" : "RecurringSubscription"
+    }
   ],
   "consumableProducts" : [
     {
@@ -10,13 +36,13 @@
       "internalID" : "tip2",
       "localizations" : [
         {
-          "description" : "A small one-time tip to say thanks.",
-          "displayName" : "Small Tip",
+          "description" : "A one-time tip. No additional functionality is enabled.",
+          "displayName" : "Small Tip ($1.99)",
           "locale" : "en_US"
         }
       ],
       "productID" : "com.example.ToddlerPhotoLock.tip2",
-      "referenceName" : "Small Tip ($2)",
+      "referenceName" : "Small Tip ($1.99)",
       "type" : "Consumable"
     },
     {
@@ -25,13 +51,13 @@
       "internalID" : "tip5",
       "localizations" : [
         {
-          "description" : "A medium one-time tip to say thanks.",
-          "displayName" : "Medium Tip",
+          "description" : "A one-time tip. No additional functionality is enabled.",
+          "displayName" : "Medium Tip ($4.99)",
           "locale" : "en_US"
         }
       ],
       "productID" : "com.example.ToddlerPhotoLock.tip5",
-      "referenceName" : "Medium Tip ($5)",
+      "referenceName" : "Medium Tip ($4.99)",
       "type" : "Consumable"
     },
     {
@@ -40,85 +66,156 @@
       "internalID" : "tip20",
       "localizations" : [
         {
-          "description" : "A large one-time tip to say thanks.",
-          "displayName" : "Large Tip",
+          "description" : "A one-time tip. No additional functionality is enabled.",
+          "displayName" : "Large Tip ($19.99)",
           "locale" : "en_US"
         }
       ],
       "productID" : "com.example.ToddlerPhotoLock.tip20",
-      "referenceName" : "Large Tip ($20)",
+      "referenceName" : "Large Tip ($19.99)",
       "type" : "Consumable"
     }
   ],
-  "autoRenewableSubscriptions" : [
+  "identifier" : "ToddlerPhotoLock",
+  "nonConsumableProducts" : [
+
+  ],
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
     {
-      "familySharable" : false,
-      "internalID" : "annual",
+      "displayPrice" : "1.99",
+      "familyShareable" : false,
+      "internalID" : "A4C86FE1",
       "localizations" : [
         {
-          "description" : "Annual supporter subscription. Helps cover the $100/year Apple developer license.",
-          "displayName" : "Annual Supporter",
+          "description" : "",
+          "displayName" : "",
           "locale" : "en_US"
         }
       ],
-      "productID" : "com.example.ToddlerPhotoLock.annual",
-      "referenceName" : "Annual Supporter",
-      "subscriptionGroupID" : "ToddlerPhotoLockSupporters",
-      "subscriptionPeriod" : "P1Y",
-      "type" : "RecurringSubscription",
-      "introductoryOffer" : null,
-      "displayPrice" : "4.99"
+      "productID" : "com.example.ToddlerPhotoLock.tip2",
+      "referenceName" : "Small Tip ($1.99)",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "5FA438DF",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.example.ToddlerPhotoLock.tip5",
+      "referenceName" : "Medium Tip ($4.99)",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "19.99",
+      "familyShareable" : false,
+      "internalID" : "E69CD587",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.example.ToddlerPhotoLock.tip20",
+      "referenceName" : "Large Tip ($19.99)",
+      "type" : "Consumable"
     }
   ],
   "settings" : {
     "_applicationInReview" : false,
+    "_askToBuyEnabled" : false,
     "_billingGracePeriodEnabled" : false,
+    "_billingIssuesEnabled" : false,
     "_billingRetryEnabled" : true,
     "_customerCancellationEnabled" : true,
+    "_disableDialogs" : false,
     "_failTransactionsEnabled" : false,
     "_interruptedPurchasesEnabled" : false,
     "_locale" : "en_US",
+    "_renewalBillingIssuesEnabled" : false,
     "_storefront" : "USA",
     "_storeKitErrors" : [
       {
-        "current" : null,
         "enabled" : false,
         "name" : "Load Products"
       },
       {
-        "current" : null,
         "enabled" : false,
         "name" : "Purchase"
       },
       {
-        "current" : null,
         "enabled" : false,
         "name" : "Verification"
       },
       {
-        "current" : null,
         "enabled" : false,
         "name" : "App Store Sync"
       },
       {
-        "current" : null,
         "enabled" : false,
         "name" : "Subscription Status"
       },
       {
-        "current" : null,
         "enabled" : false,
         "name" : "App Transaction"
       },
       {
-        "current" : null,
         "enabled" : false,
         "name" : "Manage Subscriptions Sheet"
       }
-    ]
+    ],
+    "_timeRate" : 0
   },
+  "subscriptionGroups" : [
+    {
+      "id" : "0609F1C6",
+      "localizations" : [
+
+      ],
+      "name" : "Donators",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "4.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "51706480",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "",
+              "displayName" : "",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.example.ToddlerPhotoLock.annual",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Annual subscription",
+          "subscriptionGroupID" : "0609F1C6",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
+  ],
   "version" : {
-    "major" : 2,
+    "major" : 4,
     "minor" : 0
   }
 }
