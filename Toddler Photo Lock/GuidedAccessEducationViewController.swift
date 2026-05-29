@@ -1,6 +1,14 @@
 import UIKit
 
 final class GuidedAccessEducationViewController: UIViewController {
+    typealias GuidedAccessEnabledProvider = () -> Bool
+    typealias GuidedAccessSettingsOpener = () -> Void
+    typealias ParentalGatePresenter = (UIViewController, @escaping () -> Void) -> Void
+
+    private let isGuidedAccessEnabled: GuidedAccessEnabledProvider
+    private let openGuidedAccessSettings: GuidedAccessSettingsOpener
+    private let presentParentalGate: ParentalGatePresenter
+
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -67,6 +75,24 @@ final class GuidedAccessEducationViewController: UIViewController {
         return stack
     }()
 
+    init(
+        isGuidedAccessEnabled: @escaping GuidedAccessEnabledProvider = { UIAccessibility.isGuidedAccessEnabled },
+        openGuidedAccessSettings: @escaping GuidedAccessSettingsOpener = { GuidedAccessSupport.openGuidedAccessSettings() },
+        presentParentalGate: @escaping ParentalGatePresenter = { presenter, onSuccess in
+            ParentalGate.present(from: presenter, onSuccess: onSuccess)
+        }
+    ) {
+        self.isGuidedAccessEnabled = isGuidedAccessEnabled
+        self.openGuidedAccessSettings = openGuidedAccessSettings
+        self.presentParentalGate = presentParentalGate
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
@@ -112,7 +138,7 @@ final class GuidedAccessEducationViewController: UIViewController {
     }
 
     private func refreshContent() {
-        if UIAccessibility.isGuidedAccessEnabled {
+        if isGuidedAccessEnabled() {
             titleLabel.text = "Guided Access is on"
             bodyLabel.text = "Toddler Photo Lock works best when Guided Access keeps your child inside the photo and blocks accidental app switching or swipes."
             stepsLabel.text = "You’re ready to open a photo. Toddler Photo Lock will lock automatically while Guided Access is active."
@@ -128,10 +154,13 @@ final class GuidedAccessEducationViewController: UIViewController {
     }
 
     @objc private func handlePrimaryAction() {
-        if UIAccessibility.isGuidedAccessEnabled {
+        if isGuidedAccessEnabled() {
             dismiss(animated: true)
         } else {
-            GuidedAccessSupport.openGuidedAccessSettings()
+            let openGuidedAccessSettings = self.openGuidedAccessSettings
+            presentParentalGate(self) {
+                openGuidedAccessSettings()
+            }
         }
     }
 

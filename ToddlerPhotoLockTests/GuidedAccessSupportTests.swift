@@ -1,4 +1,5 @@
 import Photos
+import UIKit
 import XCTest
 @testable import ToddlerPhotoLock
 
@@ -58,5 +59,44 @@ final class GuidedAccessSupportTests: XCTestCase {
 
         XCTAssertEqual(urls.last, "https://support.apple.com/111795")
         XCTAssertTrue(urls.contains("prefs:root=ACCESSIBILITY&path=GUIDED_ACCESS_TITLE"))
+    }
+
+    @MainActor
+    func testOpenGuidedAccessSettingsButtonPresentsParentalGateFirst() throws {
+        var didPresentGate = false
+        var didOpenSettings = false
+        var onGateSuccess: (() -> Void)?
+
+        let viewController = GuidedAccessEducationViewController(
+            isGuidedAccessEnabled: { false },
+            openGuidedAccessSettings: { didOpenSettings = true },
+            presentParentalGate: { _, onSuccess in
+                didPresentGate = true
+                onGateSuccess = onSuccess
+            }
+        )
+
+        viewController.loadViewIfNeeded()
+
+        let button = try XCTUnwrap(
+            viewController.view.allSubviews()
+                .compactMap { $0 as? UIButton }
+                .first { $0.currentTitle == "Open Guided Access settings" }
+        )
+
+        button.sendActions(for: .touchUpInside)
+
+        XCTAssertTrue(didPresentGate)
+        XCTAssertFalse(didOpenSettings)
+
+        onGateSuccess?()
+
+        XCTAssertTrue(didOpenSettings)
+    }
+}
+
+private extension UIView {
+    func allSubviews() -> [UIView] {
+        [self] + subviews.flatMap { $0.allSubviews() }
     }
 }
