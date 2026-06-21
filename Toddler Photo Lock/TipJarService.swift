@@ -96,6 +96,13 @@ final class TipJarService: ObservableObject {
         }
     }
 
+    /// Prompts App Store purchase restoration, then refreshes local entitlement state.
+    func restorePurchases() async throws -> Bool {
+        try await AppStore.sync()
+        await refreshStatus()
+        return activeSubscription != nil
+    }
+
     /// Re-checks current entitlements (e.g. after app foreground).
     func refreshStatus() async {
         for await result in Transaction.currentEntitlements {

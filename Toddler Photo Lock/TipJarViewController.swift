@@ -81,6 +81,9 @@ final class TipJarViewController: UIViewController {
         // Annual subscription row
         let annualProduct = service.products[TipJarProduct.annual]
         stack.addArrangedSubview(makeSubscriptionRow(product: annualProduct))
+
+        let restoreButton = makePlainButton(title: "Restore Purchases", action: #selector(handleRestorePurchases))
+        stack.addArrangedSubview(restoreButton)
     }
 
     // MARK: - Subscription active state
@@ -99,6 +102,9 @@ final class TipJarViewController: UIViewController {
 
         let cancelButton = makePlainButton(title: "Manage subscription", action: #selector(handleManageSubscription))
         stack.addArrangedSubview(cancelButton)
+
+        let restoreButton = makePlainButton(title: "Restore Purchases", action: #selector(handleRestorePurchases))
+        stack.addArrangedSubview(restoreButton)
     }
 
     // MARK: - Tip row
@@ -192,6 +198,18 @@ final class TipJarViewController: UIViewController {
         }
     }
 
+    @objc private func handleRestorePurchases() {
+        Task {
+            do {
+                let restored = try await service.restorePurchases()
+                render()
+                showRestoreAlert(restored: restored)
+            } catch {
+                showRestoreErrorAlert(error)
+            }
+        }
+    }
+
     private func purchase(_ product: Product) {
         Task {
             do {
@@ -222,9 +240,32 @@ final class TipJarViewController: UIViewController {
         present(alert, animated: true)
     }
 
+    private func showRestoreAlert(restored: Bool) {
+        let title = restored ? "Purchases restored" : "No purchases found"
+        let message: String
+        if restored {
+            message = "Your active subscription has been restored."
+        } else {
+            message = "We could not find any restorable purchases for this Apple ID."
+        }
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+
     private func showErrorAlert(_ error: Error) {
         let alert = UIAlertController(
             title: "Purchase failed",
+            message: error.localizedDescription,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+
+    private func showRestoreErrorAlert(_ error: Error) {
+        let alert = UIAlertController(
+            title: "Restore failed",
             message: error.localizedDescription,
             preferredStyle: .alert
         )
