@@ -38,6 +38,7 @@ final class HelpViewController: UIViewController {
         // Help section
         contentStack.addArrangedSubview(makeSectionTitleLabel(text: "Help"))
         contentStack.addArrangedSubview(makeLinkButton(title: "• Privacy Policy", imageName: "chevron.right", action: #selector(handlePrivacyPolicy)))
+        contentStack.addArrangedSubview(makeLinkButton(title: "• Standard EULA", imageName: "arrow.up.right", action: #selector(handleStandardEULA)))
         contentStack.addArrangedSubview(makeLinkButton(title: "• FAQ", imageName: "arrow.up.right", action: #selector(handleFAQ)))
         contentStack.addArrangedSubview(makeLinkButton(title: "• Report an issue", imageName: "arrow.up.right", action: #selector(handleReportIssue)))
         contentStack.addArrangedSubview(makeLinkButton(title: "• Email support", imageName: "envelope.fill", action: #selector(handleEmailSupport)))
@@ -102,6 +103,10 @@ final class HelpViewController: UIViewController {
 
     @objc private func handlePrivacyPolicy() {
         navigationController?.pushViewController(PrivacyPolicyViewController(), animated: true)
+    }
+
+    @objc private func handleStandardEULA() {
+        open(AppSupportContent.standardEULAURL)
     }
 
     @objc private func handleFAQ() {

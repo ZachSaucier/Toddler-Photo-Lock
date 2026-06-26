@@ -4,6 +4,7 @@ import XCTest
 final class AppSupportContentTests: XCTestCase {
     func testHelpLinksUseExpectedDestinations() {
         XCTAssertEqual(AppSupportContent.faqURL.absoluteString, "https://github.com/ZachSaucier/Toddler-Photo-Lock/wiki/FAQ")
+        XCTAssertEqual(AppSupportContent.standardEULAURL.absoluteString, "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")
         XCTAssertEqual(AppSupportContent.issuesURL.absoluteString, "https://github.com/ZachSaucier/Toddler-Photo-Lock/issues")
         XCTAssertEqual(AppSupportContent.supportEmailURL.absoluteString, "mailto:toddlerphotolock@zachsaucier.com")
     }

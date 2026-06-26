@@ -10,6 +10,7 @@ struct PrivacyPolicySection: Equatable {
 enum AppSupportContent {
     static let donateMessage = "I'm a dad who made this for my child. If it's been useful to you, a tip or annual subscription would mean a lot — it costs $100/year just to keep the app in the App Store."
     static let faqURL = URL(string: "https://github.com/ZachSaucier/Toddler-Photo-Lock/wiki/FAQ")!
+    static let standardEULAURL = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!
     static let issuesURL = URL(string: "https://github.com/ZachSaucier/Toddler-Photo-Lock/issues")!
     static let repositoryURL = URL(string: "https://github.com/ZachSaucier/Toddler-Photo-Lock")!
     static let supportEmailAddress = "toddlerphotolock@zachsaucier.com"
