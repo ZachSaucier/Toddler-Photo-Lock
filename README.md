@@ -9,7 +9,7 @@ Download in the iOS app store coming soon.
 ## How it works
 
 1. Select an image from your camera roll
-2. Start iOS's [Guided Acces](https://support.apple.com/en-us/111795)
+2. Start iOS's [Guided Access](https://support.apple.com/en-us/111795)
 3. Hand your phone to your toddler
 
 No other apps or controls can be accessed until you end Guided Access. It's that simple!
