@@ -5,9 +5,9 @@ import os
 // MARK: - Product identifiers
 
 enum TipJarProduct {
-    static let tip2   = "com.example.ToddlerPhotoLock.tip2"
-    static let tip5   = "com.example.ToddlerPhotoLock.tip5"
-    static let tip20  = "com.example.ToddlerPhotoLock.tip20"
+    static let tip2   = "ToddlerPhotoLock.tip2"
+    static let tip5   = "ToddlerPhotoLock.tip5"
+    static let tip20  = "ToddlerPhotoLock.tip20"
     static let annual = "com.example.ToddlerPhotoLock.annual"
 
     static var allIDs: [String] { [tip2, tip5, tip20, annual] }
