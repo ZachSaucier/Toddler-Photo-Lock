@@ -17,6 +17,38 @@ final class GuidedAccessSupportTests: XCTestCase {
         XCTAssertEqual(AppPreferences.pinnedAlbumIdentifiers(in: userDefaults), ["favorites", "album-1"])
     }
 
+    func testGuidedAccessStartDetectionPersistsOnceObserved() {
+        let suiteName = "GuidedAccessSupportTests.guidedAccessStart"
+        let userDefaults = try! XCTUnwrap(UserDefaults(suiteName: suiteName))
+        userDefaults.removePersistentDomain(forName: suiteName)
+        defer {
+            userDefaults.removePersistentDomain(forName: suiteName)
+        }
+
+        AppPreferences.recordGuidedAccessStartIfNeeded(isGuidedAccessEnabled: false, in: userDefaults)
+        XCTAssertFalse(AppPreferences.hasDetectedGuidedAccessStart(in: userDefaults))
+
+        AppPreferences.recordGuidedAccessStartIfNeeded(isGuidedAccessEnabled: true, in: userDefaults)
+        XCTAssertTrue(AppPreferences.hasDetectedGuidedAccessStart(in: userDefaults))
+
+        AppPreferences.recordGuidedAccessStartIfNeeded(isGuidedAccessEnabled: false, in: userDefaults)
+        XCTAssertTrue(AppPreferences.hasDetectedGuidedAccessStart(in: userDefaults))
+    }
+
+    func testImageViewerPromptAsksForSettingsWhenGuidedAccessStartHasNotBeenDetected() {
+        XCTAssertEqual(
+            GuidedAccessSupport.imageViewerPrompt(hasDetectedGuidedAccessStart: false),
+            "Is Guided Access enabled? If not, open the Settings app, go to Accessibility, then Guided Access, toggle it on, and set a passcode.\n\nThen open this app again and start Guided Access by triple-clicking the side button."
+        )
+    }
+
+    func testImageViewerPromptUsesShortcutWhenGuidedAccessStartHasBeenDetected() {
+        XCTAssertEqual(
+            GuidedAccessSupport.imageViewerPrompt(hasDetectedGuidedAccessStart: true),
+            "Start Guided Access by triple-clicking the side button. Toddler Photo Lock will lock automatically."
+        )
+    }
+
     func testPresentsEducationWhenLibraryAccessIsNewAndGuidedAccessIsOff() {
         XCTAssertTrue(
             GuidedAccessSupport.shouldPresentEducation(

@@ -79,7 +79,9 @@ final class ImageViewerViewController: UIViewController, UIScrollViewDelegate {
         label.layer.masksToBounds = true
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.text = "Start Guided Access with a triple-click of the side button. Toddler Photo Lock will lock automatically."
+        label.text = GuidedAccessSupport.imageViewerPrompt(
+            hasDetectedGuidedAccessStart: AppPreferences.hasDetectedGuidedAccessStart()
+        )
         return label
     }()
 
@@ -304,7 +306,11 @@ final class ImageViewerViewController: UIViewController, UIScrollViewDelegate {
 
     private func updateGuidedAccessState(animated: Bool) {
         let updateBlock = {
-            if UIAccessibility.isGuidedAccessEnabled {
+            let isGuidedAccessEnabled = UIAccessibility.isGuidedAccessEnabled
+            AppPreferences.recordGuidedAccessStartIfNeeded(isGuidedAccessEnabled: isGuidedAccessEnabled)
+            self.updateGuidedAccessBannerText()
+
+            if isGuidedAccessEnabled {
                 self.lockCurrentState()
             } else {
                 self.unlockCurrentState()
@@ -316,6 +322,12 @@ final class ImageViewerViewController: UIViewController, UIScrollViewDelegate {
         } else {
             UIView.performWithoutAnimation(updateBlock)
         }
+    }
+
+    private func updateGuidedAccessBannerText() {
+        guidedAccessBanner.text = GuidedAccessSupport.imageViewerPrompt(
+            hasDetectedGuidedAccessStart: AppPreferences.hasDetectedGuidedAccessStart()
+        )
     }
 
     @objc private func handleClose() {

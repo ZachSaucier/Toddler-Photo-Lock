@@ -7,6 +7,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         configureAppearance()
+        setUpGuidedAccessStartDetection()
         return true
     }
 
@@ -24,5 +25,21 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().scrollEdgeAppearance = navAppearance
         UINavigationBar.appearance().compactAppearance = navAppearance
         UINavigationBar.appearance().tintColor = .white
+    }
+
+    private func setUpGuidedAccessStartDetection() {
+        recordGuidedAccessStartIfNeeded()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(recordGuidedAccessStartIfNeeded),
+            name: UIAccessibility.guidedAccessStatusDidChangeNotification,
+            object: nil
+        )
+    }
+
+    @objc private func recordGuidedAccessStartIfNeeded() {
+        AppPreferences.recordGuidedAccessStartIfNeeded(
+            isGuidedAccessEnabled: UIAccessibility.isGuidedAccessEnabled
+        )
     }
 }

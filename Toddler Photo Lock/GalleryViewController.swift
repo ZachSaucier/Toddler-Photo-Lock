@@ -155,6 +155,7 @@ final class GalleryViewController: UIViewController {
         let status = photoLibraryService.authorizationStatus()
         let previousStatus = lastAuthorizationStatus ?? status
         let isGuidedAccessEnabled = UIAccessibility.isGuidedAccessEnabled
+        AppPreferences.recordGuidedAccessStartIfNeeded(isGuidedAccessEnabled: isGuidedAccessEnabled)
 
         if PhotoLibraryService.hasAllowedPhotoAccess(status) {
             photoLibraryAssets = fetchAssetsForCurrentSelection()
