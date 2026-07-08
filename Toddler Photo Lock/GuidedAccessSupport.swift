@@ -40,7 +40,7 @@ enum GuidedAccessSupport {
             return "Start Guided Access by triple-clicking the side button. Toddler Photo Lock will lock automatically."
         }
 
-        return "Is Guided Access enabled? If not, open the Settings app, go to Accessibility, then Guided Access, toggle it on, and set a passcode.\n\nThen open this app again and start Guided Access by triple-clicking the side button."
+        return "Is Guided Access enabled? If not, open the Settings app, go to Accessibility, then enable Guided Access.\n\nThen open this app and start Guided Access by triple-clicking the side button."
     }
 
     static func shouldPresentEducation(
