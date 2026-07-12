@@ -128,7 +128,6 @@ final class ImageViewerViewController: UIViewController, UIScrollViewDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)
-        UIApplication.shared.isIdleTimerDisabled = false
     }
 
     override func viewDidLayoutSubviews() {
@@ -280,7 +279,6 @@ final class ImageViewerViewController: UIViewController, UIScrollViewDelegate {
         scrollView.maximumZoomScale = currentZoom
         scrollView.isScrollEnabled = false
         scrollView.pinchGestureRecognizer?.isEnabled = false
-        UIApplication.shared.isIdleTimerDisabled = true
 
         UIView.animate(withDuration: 0.25) {
             self.closeButton.alpha = 0
@@ -296,7 +294,6 @@ final class ImageViewerViewController: UIViewController, UIScrollViewDelegate {
         scrollView.maximumZoomScale = 4
         scrollView.isScrollEnabled = true
         scrollView.pinchGestureRecognizer?.isEnabled = true
-        UIApplication.shared.isIdleTimerDisabled = false
 
         UIView.animate(withDuration: 0.25) {
             self.closeButton.alpha = 1
